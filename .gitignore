@@ -1,0 +1,26 @@
+# Absolute root build directory
+/build/
+/.dart_tool/
+/.tool/
+
+# Android specific build and local config files
+.gradle/
+/android/local.properties
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+
+# iOS/macOS specific
+.DS_Store
+/ios/.symlinks/
+/ios/Pods/
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_export_environment.sh
+
+# Web specific
+.compiled_fragments
+
+# Plugins folder
+.plugins
+.plugins_dependencies
