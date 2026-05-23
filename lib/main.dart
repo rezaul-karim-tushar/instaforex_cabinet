@@ -5,6 +5,7 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/pages/login_page.dart';
+import 'features/home/presentation/pages/home_page.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -33,10 +34,7 @@ class MyApp extends StatelessWidget {
               );
             }
             if (state is AuthAuthenticated) {
-              // Will replace with HomeScreen in next phase
-              return const Scaffold(
-                body: Center(child: Text('Logged In!')),
-              );
+              return const HomePage();
             }
             return const LoginPage();
           },
