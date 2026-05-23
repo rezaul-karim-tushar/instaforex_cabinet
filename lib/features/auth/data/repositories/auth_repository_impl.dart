@@ -19,16 +19,19 @@ class AuthRepositoryImpl implements AuthRepository {
       AuthRequestModel(login: login, password: password),
     );
 
+    final partnerToken = response.partnerToken!;
+
+    // Use partner token for peanut calls since peanut auth endpoint
+    // returns 404 — partner token works for ClientCabinetBasic endpoints
     final entity = AuthEntity(
       login: login,
-      peanutToken: response.peanutToken!,
-      partnerToken: response.partnerToken!,
+      peanutToken: partnerToken,
+      partnerToken: partnerToken,
     );
 
-    // Persist session
     await secureStorage.saveLogin(login);
-    await secureStorage.savePeanutToken(response.peanutToken!);
-    await secureStorage.savePartnerToken(response.partnerToken!);
+    await secureStorage.savePeanutToken(partnerToken);
+    await secureStorage.savePartnerToken(partnerToken);
 
     return entity;
   }
