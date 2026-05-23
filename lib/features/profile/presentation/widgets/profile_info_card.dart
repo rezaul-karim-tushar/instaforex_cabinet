@@ -137,9 +137,15 @@ class ProfileContent extends StatelessWidget {
   }
 
   String _initials(String name) {
-    final parts = name.trim().split(' ');
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return '?';
+    final parts = trimmed.split(' ').where((p) => p.isNotEmpty).toList();
     if (parts.isEmpty) return '?';
-    if (parts.length == 1) return parts[0][0].toUpperCase();
-    return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    if (parts.length == 1) {
+      return parts[0].isNotEmpty ? parts[0][0].toUpperCase() : '?';
+    }
+    final a = parts[0].isNotEmpty ? parts[0][0] : '';
+    final b = parts[1].isNotEmpty ? parts[1][0] : '';
+    return '$a$b'.toUpperCase().isNotEmpty ? '$a$b'.toUpperCase() : '?';
   }
 }
