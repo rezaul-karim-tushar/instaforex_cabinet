@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart'; // Added for the plain SOAP Dio instance
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
@@ -13,6 +14,10 @@ import 'features/profile/data/datasources/profile_remote_datasource.dart';
 import 'features/profile/data/repositories/profile_repository_impl.dart';
 import 'features/profile/domain/repositories/profile_repository.dart';
 import 'features/profile/presentation/cubit/profile_cubit.dart';
+import 'features/promo/data/datasources/promo_soap_datasource.dart';
+import 'features/promo/data/repositories/promo_repository_impl.dart';
+import 'features/promo/domain/repositories/promo_repository.dart';
+import 'features/promo/presentation/cubit/promo_cubit.dart';
 import 'features/signals/data/datasources/signals_remote_datasource.dart';
 import 'features/signals/data/repositories/signals_repository_impl.dart';
 import 'features/signals/domain/repositories/signals_repository.dart';
@@ -25,6 +30,7 @@ Future<void> init() async {
   sl.registerFactory(() => AuthBloc(authRepository: sl()));
   sl.registerFactory(() => ProfileCubit(profileRepository: sl()));
   sl.registerFactory(() => SignalsCubit(signalsRepository: sl()));
+  sl.registerFactory(() => PromoCubit(promoRepository: sl()));
 
   // Repositories
   sl.registerLazySingleton<AuthRepository>(
@@ -38,6 +44,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<SignalsRepository>(
     () => SignalsRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<PromoRepository>(
+    () => PromoRepositoryImpl(dataSource: sl()),
   );
 
   // Data sources
@@ -53,6 +62,9 @@ Future<void> init() async {
   sl.registerLazySingleton<SignalsRemoteDataSource>(
     () => SignalsRemoteDataSourceImpl(partnerDio: sl(instanceName: 'partner')),
   );
+  sl.registerLazySingleton<PromoSoapDataSource>(
+    () => PromoSoapDataSourceImpl(dio: sl(instanceName: 'soap')),
+  );
 
   // Core / External
   sl.registerLazySingleton(() => SecureStorage(sl()));
@@ -66,5 +78,12 @@ Future<void> init() async {
   sl.registerLazySingleton(
     () => DioClient.partnerDio(),
     instanceName: 'partner',
+  );
+  sl.registerLazySingleton(
+    () => Dio(BaseOptions(
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+    )),
+    instanceName: 'soap',
   );
 }
