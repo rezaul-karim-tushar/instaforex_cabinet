@@ -9,12 +9,22 @@ import 'features/auth/data/datasources/auth_remote_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/profile/data/datasources/profile_remote_datasource.dart';
+import 'features/profile/data/repositories/profile_repository_impl.dart';
+import 'features/profile/domain/repositories/profile_repository.dart';
+import 'features/profile/presentation/cubit/profile_cubit.dart';
+import 'features/signals/data/datasources/signals_remote_datasource.dart';
+import 'features/signals/data/repositories/signals_repository_impl.dart';
+import 'features/signals/domain/repositories/signals_repository.dart';
+import 'features/signals/presentation/cubit/signals_cubit.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  // BLoCs
+  // BLoCs & Cubits
   sl.registerFactory(() => AuthBloc(authRepository: sl()));
+  sl.registerFactory(() => ProfileCubit(profileRepository: sl()));
+  sl.registerFactory(() => SignalsCubit(signalsRepository: sl()));
 
   // Repositories
   sl.registerLazySingleton<AuthRepository>(
@@ -22,6 +32,12 @@ Future<void> init() async {
       remoteDataSource: sl(),
       secureStorage: sl(),
     ),
+  );
+  sl.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<SignalsRepository>(
+    () => SignalsRepositoryImpl(remoteDataSource: sl()),
   );
 
   // Data sources
@@ -31,8 +47,14 @@ Future<void> init() async {
       partnerDio: sl(instanceName: 'partner'),
     ),
   );
+  sl.registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSourceImpl(peanutDio: sl(instanceName: 'peanut')),
+  );
+  sl.registerLazySingleton<SignalsRemoteDataSource>(
+    () => SignalsRemoteDataSourceImpl(partnerDio: sl(instanceName: 'partner')),
+  );
 
-  // Core
+  // Core / External
   sl.registerLazySingleton(() => SecureStorage(sl()));
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton(() => const FlutterSecureStorage());
