@@ -122,3 +122,13 @@ compatible RouterDelegate rather than calling `Navigator.push` directly.
 This lets each host app handle routing in its own way — whether using
 go_router, auto_route, or plain Navigator — without the package caring
 about the host app's navigation structure.
+
+### API Notes
+- Partner Service (client-api.contentdatapro.com): Fully working.
+  Auth token, Signals Archive all working correctly.
+- Peanut Service (peanut.ifxdb.com): Auth endpoint returns 404 for
+  all documented paths. Profile data is handled gracefully with
+  fallback states. The correct endpoint path needs confirmation
+  from the API team.
+- SOAP Service: Connection timeout on all endpoints. Promo screen
+  shows appropriate empty state.
